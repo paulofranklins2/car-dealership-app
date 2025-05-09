@@ -101,5 +101,9 @@ public class UserInterface {
     }
 
     public void processRemoveVehicleRequest() {
+        scanner.nextLine();
+        var vin = readStringFromUser("Enter vin: ");
+        dealership.removeVehicle(vin);
+        enterToContinue();
     }
 }
