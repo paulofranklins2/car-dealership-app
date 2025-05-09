@@ -82,6 +82,22 @@ public class UserInterface {
     }
 
     public void processAddVehicleRequest() {
+        // saveVehicle(String vin, int year, String make, String model, String type, String color, double odometer, BigDecimal price) {
+        scanner.nextLine();
+        var vin = readStringFromUser("Enter vin: ");
+        var year = readIntFromUser("Enter year: ");
+        scanner.nextLine();
+        var make = readStringFromUser("Enter make: ");
+        var model = readStringFromUser("Enter model: ");
+        var type = readStringFromUser("Enter type: ");
+        var color = readStringFromUser("Enter color: ");
+        var odometer = readDoubleFromUser("Enter odometer: ");
+        var price = readBigDecimalFromUser("Enter price: ");
+        scanner.nextLine();
+        dealership.addVehicle(new Vehicle(vin, year, make, model, type, color, odometer, price));
+
+        enterToContinue();
+
     }
 
     public void processRemoveVehicleRequest() {
