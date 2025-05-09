@@ -24,11 +24,21 @@ public class Dealership {
     }
 
     public void addVehicle(Vehicle vehicle) {
-
+        //public String saveVehicle(String vin, int year, String make, String model, String type, String color, double odometer, BigDecimal price)
+        inventory.add(vehicle);
+        DealershipFileManager dealershipFileManager = new DealershipFileManager();
+        dealershipFileManager.saveDealershipOverWrite(this);
+        System.out.println("Vehicle added successfully");
     }
 
     public void removeVehicle(String vin) {
-
+        if (inventory.removeIf(vehicle -> vehicle.getVin().equalsIgnoreCase(vin))) {
+            DealershipFileManager dealershipFileManager = new DealershipFileManager();
+            dealershipFileManager.saveDealershipOverWrite(this);
+            System.out.println("Vehicle removed successfully");
+        } else {
+            System.out.println("Vehicle not found");
+        }
     }
 
     public ArrayList<Vehicle> getAllVehicles() {
@@ -36,8 +46,13 @@ public class Dealership {
     }
 
     public ArrayList<Vehicle> getVehicleByPrice(BigDecimal price) {
-
-        return null;
+        ArrayList<Vehicle> result = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getPrice().compareTo(price) == 0) {
+                result.add(vehicle);
+            }
+        }
+        return result;
     }
 
     @Override
