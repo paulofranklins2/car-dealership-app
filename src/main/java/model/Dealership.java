@@ -28,7 +28,6 @@ public class Dealership {
         inventory.add(vehicle);
         DealershipFileManager dealershipFileManager = new DealershipFileManager();
         dealershipFileManager.saveDealershipOverWrite(this);
-        System.out.println("Vehicle added successfully");
     }
 
     public void removeVehicle(String vin) {
@@ -45,13 +44,11 @@ public class Dealership {
         return inventory;
     }
 
-    public ArrayList<Vehicle> getVehicleByPrice(BigDecimal price) {
+    public ArrayList<Vehicle> getVehicleByPrice(BigDecimal lowerBound, BigDecimal upperBound) {
         ArrayList<Vehicle> result = new ArrayList<>();
-        for (Vehicle vehicle : inventory) {
-            if (vehicle.getPrice().compareTo(price) == 0) {
+        for (Vehicle vehicle : inventory)
+            if (vehicle.getPrice().compareTo(lowerBound) >= 0 && vehicle.getPrice().compareTo(upperBound) <= 0)
                 result.add(vehicle);
-            }
-        }
         return result;
     }
 
