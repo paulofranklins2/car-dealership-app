@@ -22,9 +22,8 @@ public class UserInterface {
     public void processGetByPriceRequest() {
         var lowerBound = readBigDecimalFromUser("Enter the lower bound of the price range: ");
         var upperBound = readBigDecimalFromUser("Enter the upper bound of the price range: ");
-        for (Vehicle vehicle : dealership.getAllVehicles())
-            if (vehicle.getPrice().compareTo(lowerBound) >= 0 && vehicle.getPrice().compareTo(upperBound) <= 0)
-                System.out.println(vehicle);
+        var vehicleList = this.dealership.getVehicleByPrice(lowerBound, upperBound);
+        for (Vehicle vehicle : vehicleList) System.out.println(vehicle);
         scanner.nextLine();
         enterToContinue();
     }
@@ -93,9 +92,10 @@ public class UserInterface {
         var color = readStringFromUser("Enter color: ");
         var odometer = readDoubleFromUser("Enter odometer: ");
         var price = readBigDecimalFromUser("Enter price: ");
-        scanner.nextLine();
         dealership.addVehicle(new Vehicle(vin, year, make, model, type, color, odometer, price));
+        System.out.println("Vehicle added successfully");
 
+        scanner.nextLine();
         enterToContinue();
 
     }
