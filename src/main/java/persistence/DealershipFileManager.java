@@ -19,16 +19,22 @@ public class DealershipFileManager {
             if (scanner.hasNextLine()) {
                 String[] header = scanner.nextLine().split("\\|");
                 dealership = new Dealership(header[0], header[1], header[2]);
+                logger.info("Loaded dealership: {}", dealership);
             }
             while (scanner.hasNextLine()) {
                 String[] data = scanner.nextLine().split("\\|");
 
+                Vehicle vehicle = new Vehicle(data[0], Integer.parseInt(data[1]), data[2], data[3], data[4],
+                        data[5], Double.parseDouble(data[6]), new BigDecimal(data[7]));
+
                 assert dealership != null;
-                dealership.addVehicle(new Vehicle(data[0], Integer.parseInt(data[1]), data[2], data[3], data[4],
-                        data[5], Double.parseDouble(data[6]), new BigDecimal(data[7])));
+                dealership.addVehicle(vehicle);
+
+                logger.info("Loaded vehicle: {}", vehicle);
+
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.debug("Failed to load dealership data", e);
         }
         return dealership;
     }

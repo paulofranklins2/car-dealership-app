@@ -26,5 +26,8 @@ public class Dealership {
         vehicles.remove(v);
     }
 
-
+    @Override
+    public String toString() {
+        return name + " | " + address + " | " + phone;
+    }
 }
