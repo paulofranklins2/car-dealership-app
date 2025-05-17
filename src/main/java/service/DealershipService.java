@@ -26,6 +26,21 @@ public class DealershipService {
                 .toList();
     }
 
+    public List<Vehicle> getVehiclesByColor(String color) {
+        return dealership.getVehicles().stream()
+                .filter(vehicle -> vehicle.getColor().equalsIgnoreCase(color)).toList();
+    }
+
+    public List<Vehicle> getVehiclesByOdometerRange(double start, double end) {
+        return dealership.getVehicles().stream()
+                .filter(vehicle -> vehicle.getOdometer() >= start && vehicle.getOdometer() <= end).toList();
+    }
+
+    public List<Vehicle> getVehiclesByType(String type) {
+        return dealership.getVehicles().stream()
+                .filter(vehicle -> vehicle.getType().equals(type)).toList();
+    }
+
     public boolean addVehicle(Vehicle v) {
         if (isExists(v))
             return false; // VIN already exists, don't add duplicate
@@ -54,5 +69,7 @@ public class DealershipService {
             return false;
         }
     }
+
+
 }
 //    public Contract createContract(String type, Vehicle vehicle, String name, String email, boolean finance);

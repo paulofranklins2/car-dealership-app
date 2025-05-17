@@ -4,6 +4,8 @@ package contracts;
 import lombok.Getter;
 import models.Vehicle;
 
+import java.math.BigDecimal;
+
 @Getter
 public abstract class Contract {
     private final String date;
@@ -18,6 +20,6 @@ public abstract class Contract {
         this.vehicle = vehicle;
     }
 
-    public abstract double getTotalPrice();
-    public abstract double getMonthlyPayment();
+    public abstract BigDecimal getTotalPrice();
+    public abstract BigDecimal getMonthlyPayment();
 }

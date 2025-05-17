@@ -3,6 +3,8 @@ package models;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class Vehicle {
@@ -12,10 +14,10 @@ public class Vehicle {
     private String model;
     private String type;
     private String color;
-    private double price;
+    private BigDecimal price;
     private double odometer;
 
-    public Vehicle(String vin, int year, String make, String model, String type, String color, double odometer, double price) {
+    public Vehicle(String vin, int year, String make, String model, String type, String color, double odometer, BigDecimal price) {
         this.vin = vin;
         this.year = year;
         this.make = make;

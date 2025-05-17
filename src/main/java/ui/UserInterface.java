@@ -9,6 +9,7 @@ import persistence.ContractFileManager;
 import persistence.DealershipFileManager;
 import service.DealershipService;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -65,6 +66,7 @@ public class UserInterface {
 
     private void displayAllVehicles() {
         dealership.getVehicles().forEach(System.out::println);
+        enterToContinue();
     }
 
     public void processGetByMakeModelRequest() {
@@ -85,27 +87,24 @@ public class UserInterface {
 
     public void processGetByColorRequest() {
         var color = readStringFromUser("Enter color: ");
-        dealership.getVehicles().stream()
-                .filter(vehicle -> vehicle.getColor().equals(color))
-                .forEach(System.out::println);
+        dealershipService = new DealershipService(dealership);
+        dealershipService.getVehiclesByColor(color).forEach(System.out::println);
         enterToContinue();
     }
 
     public void processGetByMileageRequest() {
-        var lowerBound = readIntFromUser("Enter the lower bound of the mileage range: ");
-        var upperBound = readIntFromUser("Enter the upper bound of the mileage range: ");
+        var lowerBound = readDoubleFromUser("Enter the lower bound of the mileage range: ");
+        var upperBound = readDoubleFromUser("Enter the upper bound of the mileage range: ");
         scanner.nextLine();
-        dealership.getVehicles().stream()
-                .filter(vehicle -> vehicle.getOdometer() >= lowerBound && vehicle.getOdometer() <= upperBound)
-                .forEach(System.out::println);
+        dealershipService = new DealershipService(dealership);
+        dealershipService.getVehiclesByOdometerRange(lowerBound, upperBound).forEach(System.out::println);
         enterToContinue();
     }
 
     public void processGetByVehicleTypeRequest() {
         var type = readStringFromUser("Enter type: ");
-        dealership.getVehicles().stream()
-                .filter(vehicle -> vehicle.getType().equals(type))
-                .forEach(System.out::println);
+        dealershipService = new DealershipService(dealership);
+        dealershipService.getVehiclesByType(type).forEach(System.out::println);
         enterToContinue();
     }
 
@@ -119,7 +118,7 @@ public class UserInterface {
         String type = readStringFromUser("Type: ");
         String color = readStringFromUser("Color: ");
         double odometer = readDoubleFromUser("Odometer: ");
-        double price = readDoubleFromUser("Price: ");
+        BigDecimal price = readBigDecimalFromUser("Price: ");
 
         Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
         boolean added = dealershipService.addVehicle(vehicle);
