@@ -61,16 +61,33 @@ Service Layer abstraction for cleaner architecture (e.g., DealershipService)
 
 ```text
 src/
-├── app/
-│   └── App.java
-├── model/
-│   ├── Dealership.java
-│   └── Vehicle.java
-├── service/
-│   ├── DealershipFileManager.java
-│   ├── DealershipService.java
-│   └── UserInterface.java
+├── main/
+│   ├── java/
+│   │   ├── contracts/
+│   │   │   ├── Contract.java
+│   │   │   ├── LeaseContract.java
+│   │   │   └── SalesContract.java
+│   │   ├── models/
+│   │   │   ├── Dealership.java
+│   │   │   └── Vehicle.java
+│   │   ├── persistence/
+│   │   │   ├── ContractFileManager.java
+│   │   │   └── DealershipFileManager.java
+│   │   ├── service/
+│   │   │   └── DealershipService.java
+│   │   ├── ui/
+│   │   │   ├── InputManager.java
+│   │   │   └── UserInterface.java
+│   │   └── App.java
+│   └── resources/
+│       ├── contracts.txt
+│       └── inventory.csv
+├── test/
+│   └── java/
+│       └── app/
+└── target/  (build output)
 ```
+
 
 ## 🧪 Sample Data Format
 
