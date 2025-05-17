@@ -26,5 +26,5 @@ public class Dealership {
         vehicles.remove(v);
     }
 
-    // TODO: Add search methods like byPrice, byMakeModel, etc.
+
 }

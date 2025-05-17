@@ -7,25 +7,36 @@ import models.Dealership;
 import models.Vehicle;
 import persistence.ContractFileManager;
 import persistence.DealershipFileManager;
+import service.DealershipService;
 
 import java.util.*;
 
+import static ui.InputManager.*;
+import static ui.InputManager.readStringFromUser;
+
 public class UserInterface {
     private Dealership dealership;
-    private final Scanner scanner = new Scanner(System.in);
+    private DealershipService dealershipService;
 
     public void display() {
         init();
         while (true) {
             showMenu();
-            int choice = scanner.nextInt();
+            int choice = readIntFromUser("Choice: ");
             scanner.nextLine(); // consume
             switch (choice) {
                 case 1 -> displayAllVehicles();
+                case 2 -> processGetByMakeModelRequest();
+                case 3 -> processGetByYearRequest();
+                case 4 -> processGetByColorRequest();
+                case 5 -> processGetByMileageRequest();
+                case 6 -> processGetByVehicleTypeRequest();
                 case 8 -> addVehicle();
                 case 9 -> removeVehicle();
                 case 10 -> sellOrLeaseVehicle();
-                case 99 -> { return; }
+                case 99 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid option.");
             }
         }
@@ -38,32 +49,85 @@ public class UserInterface {
 
     private void showMenu() {
         System.out.println("\n=== Dealership Menu ===");
-        System.out.println("1 - List all vehicles");
-        System.out.println("8 - Add vehicle");
-        System.out.println("9 - Remove vehicle");
-        System.out.println("10 - Sell/Lease vehicle");
-        System.out.println("99 - Quit");
+        System.out.println("[1] - List all vehicles");
+        System.out.println("[2] Find vehicles by make / model");
+        System.out.println("[3] Find vehicles by year range");
+        System.out.println("[4] Find vehicles by color");
+        System.out.println("[5] Find vehicles by mileage range");
+        System.out.println("[6] Find vehicles by type (sedan, truck, SUV, van)");
+        System.out.println("[7] List ALL vehicles");
+        System.out.println("[8] - Add vehicle");
+        System.out.println("[9] - Remove vehicle");
+        System.out.println("[10] - Sell/Lease vehicle");
+        System.out.println("[99] - Quit");
     }
 
     private void displayAllVehicles() {
         dealership.getVehicles().forEach(System.out::println);
     }
 
+    public void processGetByMakeModelRequest() {
+        var option = readStringFromUser("Enter make/model: ");
+        dealershipService = new DealershipService(dealership);
+        dealershipService.getVehiclesByMakeOrModel(option).forEach(System.out::println);
+        enterToContinue();
+    }
+
+    public void processGetByYearRequest() {
+        var lowerBoundYear = readIntFromUser("Enter lower bound year: ");
+        var upperBoundYear = readIntFromUser("Enter upper bound year: ");
+        scanner.nextLine();
+        dealershipService = new DealershipService(dealership);
+        dealershipService.getVehiclesByYearRange(lowerBoundYear, upperBoundYear).forEach(System.out::println);
+        enterToContinue();
+    }
+
+    public void processGetByColorRequest() {
+        var color = readStringFromUser("Enter color: ");
+        dealership.getVehicles().stream()
+                .filter(vehicle -> vehicle.getColor().equals(color))
+                .forEach(System.out::println);
+        enterToContinue();
+    }
+
+    public void processGetByMileageRequest() {
+        var lowerBound = readIntFromUser("Enter the lower bound of the mileage range: ");
+        var upperBound = readIntFromUser("Enter the upper bound of the mileage range: ");
+        scanner.nextLine();
+        dealership.getVehicles().stream()
+                .filter(vehicle -> vehicle.getOdometer() >= lowerBound && vehicle.getOdometer() <= upperBound)
+                .forEach(System.out::println);
+        enterToContinue();
+    }
+
+    public void processGetByVehicleTypeRequest() {
+        var type = readStringFromUser("Enter type: ");
+        dealership.getVehicles().stream()
+                .filter(vehicle -> vehicle.getType().equals(type))
+                .forEach(System.out::println);
+        enterToContinue();
+    }
+
     private void addVehicle() {
         System.out.println("Enter details (VIN, year, make, model, type, color, odometer, price):");
-        Vehicle v = new Vehicle(
-                scanner.nextLine(),
-                scanner.nextInt(), scanner.nextLine(),
-                scanner.nextLine(), scanner.nextLine(),
-                scanner.nextLine(), scanner.nextInt(),
-                scanner.nextDouble());
+        var vin = readStringFromUser("Vin: ");
+        var year = readIntFromUser("Year: ");
+        scanner.nextLine();
+        var make = readStringFromUser("Make: ");
+        var model = readStringFromUser("Model: ");
+        var type = readStringFromUser("Type: ");
+        var color = readStringFromUser("Color: ");
+        var odometer = readDoubleFromUser("Odometer: ");
+        var price = readDoubleFromUser("Price: ");
+
+        Vehicle v = new Vehicle(vin, year, make, model, type, color, odometer, price);
         dealership.addVehicle(v);
         new DealershipFileManager().saveDealership(dealership);
     }
 
     private void removeVehicle() {
-        System.out.print("Enter VIN to remove: ");
-        String vin = scanner.nextLine();
+        var vin = readStringFromUser("Vin: ");
+
         Vehicle target = dealership.getVehicles().stream()
                 .filter(v -> v.getVin().equals(vin))
                 .findFirst().orElse(null);
@@ -76,8 +140,8 @@ public class UserInterface {
     }
 
     private void sellOrLeaseVehicle() {
-        System.out.print("Enter VIN: ");
-        String vin = scanner.nextLine();
+        var vin = readStringFromUser("Vin: ");
+
         Vehicle vehicle = dealership.getVehicles().stream()
                 .filter(v -> v.getVin().equals(vin))
                 .findFirst().orElse(null);
@@ -86,12 +150,11 @@ public class UserInterface {
             return;
         }
 
-        System.out.print("Customer name: ");
-        String name = scanner.nextLine();
-        System.out.print("Customer email: ");
-        String email = scanner.nextLine();
-        System.out.print("Is this a Sale or Lease (S/L)? ");
-        String type = scanner.nextLine().toUpperCase();
+        String name = readStringFromUser("Customer name: ");
+        String email = readStringFromUser("Customer email: ");
+        System.out.println("[S] - Sale");
+        System.out.println("[L] - Lease");
+        String type = readStringFromUser("Choice: ").toUpperCase();
 
         Contract contract;
         if (type.equals("S")) {
