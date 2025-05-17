@@ -9,6 +9,7 @@ import persistence.ContractFileManager;
 import persistence.DealershipFileManager;
 import service.DealershipService;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static ui.InputManager.*;
@@ -23,7 +24,7 @@ public class UserInterface {
         while (true) {
             showMenu();
             int choice = readIntFromUser("Choice: ");
-            scanner.nextLine(); // consume
+            scanner.nextLine(); //consuming int input left over
             switch (choice) {
                 case 1 -> displayAllVehicles();
                 case 2 -> processGetByMakeModelRequest();
@@ -110,33 +111,35 @@ public class UserInterface {
 
     private void addVehicle() {
         System.out.println("Enter details (VIN, year, make, model, type, color, odometer, price):");
-        var vin = readStringFromUser("Vin: ");
-        var year = readIntFromUser("Year: ");
+        String vin = readStringFromUser("Vin: ");
+        int year = readIntFromUser("Year: ");
         scanner.nextLine();
-        var make = readStringFromUser("Make: ");
-        var model = readStringFromUser("Model: ");
-        var type = readStringFromUser("Type: ");
-        var color = readStringFromUser("Color: ");
-        var odometer = readDoubleFromUser("Odometer: ");
-        var price = readDoubleFromUser("Price: ");
+        String make = readStringFromUser("Make: ");
+        String model = readStringFromUser("Model: ");
+        String type = readStringFromUser("Type: ");
+        String color = readStringFromUser("Color: ");
+        double odometer = readDoubleFromUser("Odometer: ");
+        double price = readDoubleFromUser("Price: ");
 
-        Vehicle v = new Vehicle(vin, year, make, model, type, color, odometer, price);
-        dealership.addVehicle(v);
-        new DealershipFileManager().saveDealership(dealership);
+        Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
+        boolean added = dealershipService.addVehicle(vehicle);
+
+        if (added)
+            System.out.println("Vehicle added successfully.");
+        else
+            System.out.println("Vehicle with this VIN already exists.");
     }
 
     private void removeVehicle() {
         var vin = readStringFromUser("Vin: ");
+        dealershipService = new DealershipService(dealership);
+        boolean removed = dealershipService.removeVehicle(vin);
 
-        Vehicle target = dealership.getVehicles().stream()
-                .filter(v -> v.getVin().equals(vin))
-                .findFirst().orElse(null);
-        if (target != null) {
-            dealership.removeVehicle(target);
-            new DealershipFileManager().saveDealership(dealership);
-        } else {
+        if (removed)
+            System.out.println("Vehicle removed.");
+        else
             System.out.println("Vehicle not found.");
-        }
+        enterToContinue();
     }
 
     private void sellOrLeaseVehicle() {
@@ -176,6 +179,6 @@ public class UserInterface {
     }
 
     private String getToday() {
-        return new java.text.SimpleDateFormat("yyyyMMdd").format(new Date());
+        return new SimpleDateFormat("yyyyMMdd").format(new Date());
     }
 }
