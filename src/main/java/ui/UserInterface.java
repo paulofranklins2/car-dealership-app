@@ -25,7 +25,6 @@ public class UserInterface {
         while (true) {
             showMenu();
             int choice = readIntFromUser("Choice: ");
-            scanner.nextLine(); //consuming int input left over
             switch (choice) {
                 case 1 -> displayAllVehicles();
                 case 2 -> processGetByMakeModelRequest();
