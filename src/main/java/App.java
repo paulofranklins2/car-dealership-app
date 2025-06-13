@@ -1,4 +1,4 @@
-import config.db.AppInitializer;
+import config.AppInitializer;
 import ui.UserInterface;
 
 import static ui.InputManager.readStringFromUser;

@@ -1,8 +1,5 @@
-package config.db;
+package config;
 
-import config.DataManager;
-import config.InventoryDao;
-import config.InventoryRepository;
 import service.InventoryService;
 import ui.DBUserInterface;
 
